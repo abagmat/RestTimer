@@ -33,6 +33,7 @@ namespace RestTimer
             this.notifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
             this.notifyContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.quitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.timer = new System.Windows.Forms.Timer(this.components);
             this.notifyContextMenuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -47,14 +48,18 @@ namespace RestTimer
             this.notifyContextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.quitToolStripMenuItem});
             this.notifyContextMenuStrip.Name = "notifyContextMenuStrip";
-            this.notifyContextMenuStrip.Size = new System.Drawing.Size(181, 48);
+            this.notifyContextMenuStrip.Size = new System.Drawing.Size(98, 26);
             // 
             // quitToolStripMenuItem
             // 
             this.quitToolStripMenuItem.Name = "quitToolStripMenuItem";
-            this.quitToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.quitToolStripMenuItem.Size = new System.Drawing.Size(97, 22);
             this.quitToolStripMenuItem.Tag = "tagQuit";
             this.quitToolStripMenuItem.Text = "Quit";
+            // 
+            // timer
+            // 
+            this.timer.Interval = 1000;
             // 
             // MainWindow
             // 
@@ -77,6 +82,7 @@ namespace RestTimer
         private System.Windows.Forms.NotifyIcon notifyIcon;
         private System.Windows.Forms.ContextMenuStrip notifyContextMenuStrip;
         private System.Windows.Forms.ToolStripMenuItem quitToolStripMenuItem;
+        private System.Windows.Forms.Timer timer;
     }
 }
 

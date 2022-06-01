@@ -15,15 +15,26 @@ namespace RestTimer
 {
     public partial class MainWindow : Form
     {
+        private DateTime dateTime;
+
         public MainWindow()
         {
             InitializeComponent();
+
             // Custom init
             this.KeyPress += MainWindow_KeyPress;
             this.Resize += MainWindow_Resize;
             this.FormClosing += MainWindow_FormClosing;
+
             notifyIcon.MouseDoubleClick += NotifyIcon_MouseDoubleClick;
             notifyContextMenuStrip.ItemClicked += NotifyContextMenuStrip_ItemClicked;
+
+            timer.Tick += Timer_Tick;
+            timer.Start();
+        }
+
+        private void Timer_Tick(object sender, EventArgs e)
+        {
         }
 
         private void NotifyContextMenuStrip_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
@@ -31,14 +42,17 @@ namespace RestTimer
             if (e.ClickedItem.Tag.Equals("tagQuit"))
             {
                 notifyIcon.Visible = false;
-                System.Windows.Forms.Application.Exit();
+                Application.Exit();
             }
         }
 
         private void MainWindow_FormClosing(object sender, FormClosingEventArgs e)
         {
-            MinimizeToTray();
-            e.Cancel = true;
+            if (e.CloseReason == CloseReason.UserClosing)
+            {
+                MinimizeToTray();
+                e.Cancel = true;
+            }
         }
 
         private void NotifyIcon_MouseDoubleClick(object sender, MouseEventArgs e)
