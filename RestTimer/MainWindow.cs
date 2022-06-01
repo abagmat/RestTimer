@@ -7,15 +7,27 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-
-// This is the code for your desktop app.
-// Press Ctrl+F5 (or go to Debug > Start Without Debugging) to run your app.
+using System.Runtime.InteropServices;
 
 namespace RestTimer
 {
     public partial class MainWindow : Form
     {
-        private DateTime dateTime;
+        [StructLayout(LayoutKind.Sequential)]
+        struct LASTINPUTINFO
+        {
+            public static readonly int SizeOf = Marshal.SizeOf(typeof(LASTINPUTINFO));
+
+            [MarshalAs(UnmanagedType.U4)]
+            public UInt32 cbSize;
+            [MarshalAs(UnmanagedType.U4)]
+            public UInt32 dwTime;
+        }
+
+        [DllImport("user32.dll")]
+        static extern bool GetLastInputInfo(ref LASTINPUTINFO plii);
+
+        private DateTime LastNonActivityDateTime;
 
         public MainWindow()
         {
@@ -33,8 +45,28 @@ namespace RestTimer
             timer.Start();
         }
 
+        public double SystemIdleTime
+        {
+            get
+            {
+                int systemUptime = Environment.TickCount;
+                int idleTicks = 0;
+                LASTINPUTINFO lastInputInfo = new LASTINPUTINFO();
+                lastInputInfo.cbSize = (UInt32)Marshal.SizeOf(lastInputInfo);
+                lastInputInfo.dwTime = 0;
+                if (GetLastInputInfo(ref lastInputInfo))
+                {
+                    int lastInputTicks = (int)lastInputInfo.dwTime;
+                    idleTicks = systemUptime - lastInputTicks;
+                }
+                return ((idleTicks > 0) ? (idleTicks / 1000) : idleTicks);
+            }
+        }
+
         private void Timer_Tick(object sender, EventArgs e)
         {
+            double t = SystemIdleTime;
+            System.Diagnostics.Debug.Write(t);
         }
 
         private void NotifyContextMenuStrip_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
