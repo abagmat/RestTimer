@@ -23,6 +23,16 @@ namespace RestTimer
             this.Resize += MainWindow_Resize;
             this.FormClosing += MainWindow_FormClosing;
             notifyIcon.MouseDoubleClick += NotifyIcon_MouseDoubleClick;
+            notifyContextMenuStrip.ItemClicked += NotifyContextMenuStrip_ItemClicked;
+        }
+
+        private void NotifyContextMenuStrip_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        {
+            if (e.ClickedItem.Tag.Equals("tagQuit"))
+            {
+                notifyIcon.Visible = false;
+                System.Windows.Forms.Application.Exit();
+            }
         }
 
         private void MainWindow_FormClosing(object sender, FormClosingEventArgs e)
@@ -68,9 +78,5 @@ namespace RestTimer
             notifyIcon.Visible = false;
         }
 
-        //private void button1_Click(object sender, EventArgs e)
-        //{
-        //    MessageBox.Show("Thanks!");
-        //}
     }
 }
