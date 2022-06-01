@@ -20,6 +20,28 @@ namespace RestTimer
             InitializeComponent();
             // Custom init
             this.KeyPress += MainWindow_KeyPress;
+            this.Resize += MainWindow_Resize;
+            this.FormClosing += MainWindow_FormClosing;
+            notifyIcon.MouseDoubleClick += NotifyIcon_MouseDoubleClick;
+        }
+
+        private void MainWindow_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            MinimizeToTray();
+            e.Cancel = true;
+        }
+
+        private void NotifyIcon_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            RestoreFromTray();
+        }
+
+        private void MainWindow_Resize(object sender, EventArgs e)
+        {
+            if (this.WindowState == FormWindowState.Minimized)
+            {
+                MinimizeToTray();
+            }
         }
 
         private void MainWindow_KeyPress(object sender, KeyPressEventArgs e)
@@ -35,7 +57,15 @@ namespace RestTimer
 
         private void MinimizeToTray()
         {
-            throw new NotImplementedException();
+            Hide();
+            notifyIcon.Visible = true;
+        }
+
+        private void RestoreFromTray()
+        {
+            Show();
+            this.WindowState = FormWindowState.Normal;
+            notifyIcon.Visible = false;
         }
 
         //private void button1_Click(object sender, EventArgs e)
