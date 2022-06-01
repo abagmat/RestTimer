@@ -18,6 +18,24 @@ namespace RestTimer
         public MainWindow()
         {
             InitializeComponent();
+            // Custom init
+            this.KeyPress += MainWindow_KeyPress;
+        }
+
+        private void MainWindow_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            switch (e.KeyChar)
+            {
+                case (char)27:
+                    e.Handled = true;
+                    MinimizeToTray();
+                    break;
+            }
+        }
+
+        private void MinimizeToTray()
+        {
+            throw new NotImplementedException();
         }
 
         //private void button1_Click(object sender, EventArgs e)
