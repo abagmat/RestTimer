@@ -26,8 +26,16 @@ namespace RestTimer
 
         [DllImport("user32.dll")]
         static extern bool GetLastInputInfo(ref LASTINPUTINFO plii);
-
-        private DateTime LastNonActivityDateTime;
+    
+        private static readonly int kMaxWorkSeconds = 25 * 60 * 60;
+        private static readonly int kMinRestSeconds = 5 * 60 * 60;
+        private static readonly int kWorkToleranceSeconds = 10;
+        private static readonly int kRestToleranceSeconds = 3;
+        private static readonly int kBalloonMilliSeconds = 500;
+        private static readonly string kBalloonMessage = "Time to rest.\n{0:D2}:{1:D2}";
+        private static readonly string kBalloonTitle = "RestTimer";
+        private bool WorkMode = true;
+        private int TickCount = 0;
 
         public MainWindow()
         {
@@ -39,10 +47,19 @@ namespace RestTimer
             this.FormClosing += MainWindow_FormClosing;
 
             notifyIcon.MouseDoubleClick += NotifyIcon_MouseDoubleClick;
+            notifyIcon.BalloonTipClosed += NotifyIcon_BalloonTipClosed;
             notifyContextMenuStrip.ItemClicked += NotifyContextMenuStrip_ItemClicked;
 
             timer.Tick += Timer_Tick;
             timer.Start();
+        }
+
+        private void NotifyIcon_BalloonTipClosed(object sender, EventArgs e)
+        {
+            if (!WorkMode)
+            {
+                ShowBalloon();
+            }
         }
 
         public double SystemIdleTime
@@ -63,10 +80,52 @@ namespace RestTimer
             }
         }
 
+        public string BalloonMessage
+        {
+            get
+            {
+                int countdownMins = (kMinRestSeconds - TickCount) / 60;
+                int countdownSecs = (kMinRestSeconds - TickCount) % 60;
+                return String.Format(kBalloonMessage, countdownMins, countdownSecs);
+            }
+        }
+
         private void Timer_Tick(object sender, EventArgs e)
         {
-            double t = SystemIdleTime;
-            System.Diagnostics.Debug.Write(t);
+            double idleTime = SystemIdleTime;
+            if (WorkMode)
+            {
+                if (idleTime < kWorkToleranceSeconds)
+                {
+                    TickCount++;
+                    if (TickCount > kMaxWorkSeconds)
+                    {
+                        WorkMode = false;
+                        TickCount = 0;
+                        ShowBalloon();
+                    }
+                }
+                System.Diagnostics.Debug.WriteLine("Work " + TickCount);
+                return;
+            }
+            // Rest time
+            if (idleTime > kRestToleranceSeconds)
+            {
+                TickCount++;
+                if (TickCount > kMinRestSeconds)
+                {
+                    WorkMode = true;
+                    TickCount = 0;
+                    return;
+                }
+            }
+            notifyIcon.BalloonTipText = BalloonMessage;
+            System.Diagnostics.Debug.WriteLine("Rest " + TickCount);
+        }
+
+        private void ShowBalloon()
+        {
+            notifyIcon.ShowBalloonTip(kBalloonMilliSeconds, kBalloonTitle, BalloonMessage, ToolTipIcon.Warning);
         }
 
         private void NotifyContextMenuStrip_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
@@ -114,14 +173,11 @@ namespace RestTimer
         private void MinimizeToTray()
         {
             Hide();
-            notifyIcon.Visible = true;
         }
 
         private void RestoreFromTray()
         {
             Show();
-            this.WindowState = FormWindowState.Normal;
-            notifyIcon.Visible = false;
         }
 
     }

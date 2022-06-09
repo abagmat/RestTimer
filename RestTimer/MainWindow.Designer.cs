@@ -42,6 +42,7 @@ namespace RestTimer
             this.notifyIcon.ContextMenuStrip = this.notifyContextMenuStrip;
             this.notifyIcon.Icon = ((System.Drawing.Icon)(resources.GetObject("notifyIcon.Icon")));
             this.notifyIcon.Text = "RestTimer";
+            this.notifyIcon.Visible = true;
             // 
             // notifyContextMenuStrip
             // 
@@ -71,7 +72,8 @@ namespace RestTimer
             this.Margin = new System.Windows.Forms.Padding(2);
             this.MaximizeBox = false;
             this.Name = "MainWindow";
-            this.Text = "NotTimer";
+            this.ShowInTaskbar = false;
+            this.Text = "RestTimer";
             this.notifyContextMenuStrip.ResumeLayout(false);
             this.ResumeLayout(false);
 
