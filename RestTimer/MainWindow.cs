@@ -32,7 +32,7 @@ namespace RestTimer
         private static readonly int kWorkToleranceSeconds = 10;
         private static readonly int kRestToleranceSeconds = 3;
         private static readonly int kBalloonMilliSeconds = 500;
-        private static readonly string kBalloonMessage = "Time to rest.\nClick on tip reset.\n{0:D2}:{1:D2}";
+        private static readonly string kBalloonMessage = "Time to rest.\nClick on tip to reset.\n{0:D2}:{1:D2}";
         private static readonly string kBalloonText = "Time to work {0:D2}:{1:D2}";
         private bool WorkMode = true;
         private int TickCount = 0;
