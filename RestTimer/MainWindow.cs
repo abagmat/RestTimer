@@ -26,13 +26,13 @@ namespace RestTimer
 
         [DllImport("user32.dll")]
         static extern bool GetLastInputInfo(ref LASTINPUTINFO plii);
-    
+
         private static readonly int kMaxWorkSeconds = 25 * 60 * 60;
         private static readonly int kMinRestSeconds = 5 * 60 * 60;
         private static readonly int kWorkToleranceSeconds = 10;
         private static readonly int kRestToleranceSeconds = 3;
         private static readonly int kBalloonMilliSeconds = 500;
-        private static readonly string kBalloonMessage = "Time to rest.\n{0:D2}:{1:D2}";
+        private static readonly string kBalloonMessage = "Time to rest.\nClick on tip reset.\n{0:D2}:{1:D2}";
         private static readonly string kBalloonTitle = "RestTimer";
         private bool WorkMode = true;
         private int TickCount = 0;
@@ -48,10 +48,17 @@ namespace RestTimer
 
             notifyIcon.MouseDoubleClick += NotifyIcon_MouseDoubleClick;
             notifyIcon.BalloonTipClosed += NotifyIcon_BalloonTipClosed;
+            notifyIcon.BalloonTipClicked += NotifyIcon_BalloonTipClicked;
             notifyContextMenuStrip.ItemClicked += NotifyContextMenuStrip_ItemClicked;
 
             timer.Tick += Timer_Tick;
             timer.Start();
+        }
+
+        private void NotifyIcon_BalloonTipClicked(object sender, EventArgs e)
+        {
+            TickCount = 0;
+            WorkMode = true;
         }
 
         private void NotifyIcon_BalloonTipClosed(object sender, EventArgs e)
@@ -172,12 +179,14 @@ namespace RestTimer
 
         private void MinimizeToTray()
         {
-            Hide();
+            this.WindowState = FormWindowState.Minimized;
+            this.ShowInTaskbar = false;
         }
 
         private void RestoreFromTray()
         {
-            Show();
+            //this.WindowState = FormWindowState.Normal;
+            //this.ShowInTaskbar = true;
         }
 
     }

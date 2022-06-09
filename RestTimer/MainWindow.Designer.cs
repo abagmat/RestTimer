@@ -74,6 +74,7 @@ namespace RestTimer
             this.Name = "MainWindow";
             this.ShowInTaskbar = false;
             this.Text = "RestTimer";
+            this.WindowState = System.Windows.Forms.FormWindowState.Minimized;
             this.notifyContextMenuStrip.ResumeLayout(false);
             this.ResumeLayout(false);
 
