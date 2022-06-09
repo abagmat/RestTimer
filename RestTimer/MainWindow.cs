@@ -33,7 +33,7 @@ namespace RestTimer
         private static readonly int kRestToleranceSeconds = 3;
         private static readonly int kBalloonMilliSeconds = 500;
         private static readonly string kBalloonMessage = "Time to rest.\nClick on tip reset.\n{0:D2}:{1:D2}";
-        private static readonly string kBalloonTitle = "RestTimer";
+        private static readonly string kBalloonText = "Time to work {0:D2}:{1:D2}";
         private bool WorkMode = true;
         private int TickCount = 0;
 
@@ -97,6 +97,20 @@ namespace RestTimer
             }
         }
 
+        public string BalloonText
+        {
+            get
+            {
+                if (WorkMode)
+                {
+                    int countdownMins = (kMaxWorkSeconds - TickCount) / 60;
+                    int countdownSecs = (kMaxWorkSeconds - TickCount) % 60;
+                    return String.Format(kBalloonText, countdownMins, countdownSecs);
+                }
+                return this.Text;
+            }
+        }
+
         private void Timer_Tick(object sender, EventArgs e)
         {
             double idleTime = SystemIdleTime;
@@ -110,8 +124,10 @@ namespace RestTimer
                         WorkMode = false;
                         TickCount = 0;
                         ShowBalloon();
+                        return;
                     }
                 }
+                notifyIcon.Text = BalloonText;
                 System.Diagnostics.Debug.WriteLine("Work " + TickCount);
                 return;
             }
@@ -127,12 +143,13 @@ namespace RestTimer
                 }
             }
             notifyIcon.BalloonTipText = BalloonMessage;
+            notifyIcon.Text = BalloonText;
             System.Diagnostics.Debug.WriteLine("Rest " + TickCount);
         }
 
         private void ShowBalloon()
         {
-            notifyIcon.ShowBalloonTip(kBalloonMilliSeconds, kBalloonTitle, BalloonMessage, ToolTipIcon.Warning);
+            notifyIcon.ShowBalloonTip(kBalloonMilliSeconds, BalloonText, BalloonMessage, ToolTipIcon.Warning);
         }
 
         private void NotifyContextMenuStrip_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
