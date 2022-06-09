@@ -27,8 +27,8 @@ namespace RestTimer
         [DllImport("user32.dll")]
         static extern bool GetLastInputInfo(ref LASTINPUTINFO plii);
 
-        private static readonly int kMaxWorkSeconds = 25 * 60 * 60;
-        private static readonly int kMinRestSeconds = 5 * 60 * 60;
+        private static readonly int kMaxWorkSeconds = 25 * 60;
+        private static readonly int kMinRestSeconds = 5 * 60;
         private static readonly int kWorkToleranceSeconds = 10;
         private static readonly int kRestToleranceSeconds = 3;
         private static readonly int kBalloonMilliSeconds = 500;
