@@ -127,6 +127,10 @@ namespace RestTimer
                         return;
                     }
                 }
+                if (idleTime > kMinRestSeconds)
+                {
+                    TickCount = 0;
+                }
                 notifyIcon.Text = BalloonText;
                 System.Diagnostics.Debug.WriteLine("Work " + TickCount);
                 return;
