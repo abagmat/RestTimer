@@ -32,7 +32,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>MainIcon.ico</ApplicationIcon>
+    <ApplicationIcon>Resources\MainIcon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -84,9 +84,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\MainIcon.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="MainIcon.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
