@@ -58,6 +58,11 @@ namespace RestTimer
             SystemEvents.PowerModeChanged += SystemEvents_PowerModeChanged;
         }
 
+        ~MainWindow()
+        {
+            SystemEvents.PowerModeChanged -= SystemEvents_PowerModeChanged;
+        }
+
         private void SystemEvents_PowerModeChanged(object sender, PowerModeChangedEventArgs e)
         {
             switch (e.Mode)
