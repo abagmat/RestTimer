@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
+using Microsoft.Win32;
 
 namespace RestTimer
 {
@@ -53,6 +54,23 @@ namespace RestTimer
 
             timer.Tick += Timer_Tick;
             timer.Start();
+
+            SystemEvents.PowerModeChanged += SystemEvents_PowerModeChanged;
+        }
+
+        private void SystemEvents_PowerModeChanged(object sender, PowerModeChangedEventArgs e)
+        {
+            switch (e.Mode)
+            {
+                case PowerModes.Resume:
+                    TickCount = 0;
+                    WorkMode = true;
+                    timer.Start();
+                    break;
+                case PowerModes.Suspend:
+                    timer.Stop();
+                    break;
+            }
         }
 
         private void NotifyIcon_BalloonTipClicked(object sender, EventArgs e)

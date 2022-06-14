@@ -1,3 +1,5 @@
+using Microsoft.Win32;
+
 namespace RestTimer
 {
     partial class MainWindow
@@ -15,6 +17,8 @@ namespace RestTimer
         {
             if (disposing && (components != null))
             {
+                SystemEvents.PowerModeChanged -= SystemEvents_PowerModeChanged;
+
                 components.Dispose();
             }
             base.Dispose(disposing);
