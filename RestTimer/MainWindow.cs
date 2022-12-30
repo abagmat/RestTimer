@@ -87,10 +87,23 @@ namespace RestTimer
 
         private void NotifyIcon_BalloonTipClosed(object sender, EventArgs e)
         {
-            if (!WorkMode)
+            ShowBalloonDelayed(kRestReminderRepeatMilliSeconds);
+        }
+
+        private void ShowBalloonDelayed(int delayMs)
+        {
+            Task.Delay(delayMs).ContinueWith(t =>
             {
-                Task.Delay(kRestReminderRepeatMilliSeconds).ContinueWith(t => ShowBalloon());
-            }
+                if (WorkMode)
+                    return;
+
+                if (SystemIdleTime < kRestToleranceSeconds)
+                {
+                    ShowBalloon();
+                    return;
+                }
+                ShowBalloonDelayed(kBalloonMilliSeconds);
+            });
         }
 
         public double SystemIdleTime
@@ -156,7 +169,7 @@ namespace RestTimer
                     TickCount = 0;
                 }
                 notifyIcon.Text = BalloonText;
-                System.Diagnostics.Debug.WriteLine("Work " + TickCount);
+                //System.Diagnostics.Debug.WriteLine("Work " + TickCount);
                 return;
             }
             // Rest time
@@ -172,7 +185,7 @@ namespace RestTimer
             }
             notifyIcon.BalloonTipText = BalloonMessage;
             notifyIcon.Text = BalloonText;
-            System.Diagnostics.Debug.WriteLine("Rest " + TickCount);
+            //System.Diagnostics.Debug.WriteLine("Rest " + TickCount);
         }
 
         private void ShowBalloon()
